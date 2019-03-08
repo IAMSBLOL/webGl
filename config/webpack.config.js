@@ -45,7 +45,7 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 module.exports = function(webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
-
+  const localIdentName = isEnvProduction ? '[hash:base64:4]' : '[name]_[local]_[hash:base64:3]';
   // Webpack uses `publicPath` to determine where the app is being served from.
   // It requires a trailing slash, or the file assets will get an incorrect path.
   // In development, we always serve from the root. This makes config easier.
@@ -346,6 +346,14 @@ module.exports = function(webpackEnv) {
                       },
                     },
                   ],
+                  ['react-css-modules', {
+                    'filetypes': {
+                        '.scss': {
+                            'syntax': 'postcss-scss'
+                        }
+                    },
+                    'generateScopedName': localIdentName
+                }]
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
