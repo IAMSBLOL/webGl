@@ -1,0 +1,5 @@
+/node_modules
+/dist
+/src/public/semantic
+/src/public/fonts/iconfont
+/src/index.css
