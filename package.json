@@ -57,11 +57,17 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "prebuild": "npm run clean",
+    "test": "node scripts/test.js",
+    "lint": "eslint src & stylelint \"src/**/*.scss\"",
+    "lint:fix": "eslint src --fix & stylefmt -r \"src/**/*.scss\""
   },
   "eslintConfig": {
     "extends": "react-app"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "browserslist": [
     ">0.2%",
     "not dead",
@@ -113,15 +119,14 @@
       "E:\\pro\\react-cli\\node_modules\\jest-watch-typeahead\\testname.js"
     ]
   },
-  "babel": {
-    "presets": [
-      "react-app"
-    ]
-  },
   "devDependencies": {
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@babel/plugin-transform-react-jsx-source": "^7.2.0",
+    "babel-plugin-import": "^1.11.0",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "extract-css-chunks-webpack-plugin": "^4.0.1",
     "node-sass": "^4.11.0",
+    "plugin-import": "^1.0.43",
     "postcss-scss": "^2.0.0",
     "stylelint": "^9.10.1",
     "stylelint-config-standard": "^18.2.0",

@@ -10,6 +10,7 @@ const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const ExtractCssChunks = require("extract-css-chunks-webpack-plugin")
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const safePostCssParser = require('postcss-safe-parser');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -40,12 +41,38 @@ const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
 
+
+
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function(webpackEnv) {
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
-  const localIdentName = isEnvProduction ? '[hash:base64:4]' : '[name]_[local]_[hash:base64:3]';
+  const localIdentName = isEnvProduction ? '[hash:base64:5]' : '[name]__[local]___[hash:base64:5]';
+
+  const babelrc = fs.readFileSync(require.resolve('../.babelrc'));
+
+  const babelOptions = JSON.parse(babelrc);
+  babelOptions.plugins.push(["react-css-modules", {
+    "filetypes": {
+        ".scss": {
+            "syntax": "postcss-scss"
+        }
+    },
+    "generateScopedName": localIdentName,
+  }])
+  babelOptions.plugins.push(
+    [
+      require.resolve('babel-plugin-named-asset-import'),
+      {
+        loaderMap: {
+          svg: {
+            ReactComponent: '@svgr/webpack?-svgo,+ref![path]',
+          },
+        },
+      },
+    ]
+  )
   // Webpack uses `publicPath` to determine where the app is being served from.
   // It requires a trailing slash, or the file assets will get an incorrect path.
   // In development, we always serve from the root. This makes config easier.
@@ -68,7 +95,15 @@ module.exports = function(webpackEnv) {
   // common function to get style loaders
   const getStyleLoaders = (cssOptions, preProcessor) => {
     const loaders = [
-      isEnvDevelopment && require.resolve('style-loader'),
+      isEnvDevelopment && {
+        loader:ExtractCssChunks.loader,
+        options: {
+          hot: true, // if you want HMR - we try to automatically inject hot reloading but if it's not working, add it to the config
+          modules: true, // if you use cssModules, this can help.
+          reloadAll: true, // when desperation kicks in - this is a brute force HMR flag
+
+        }
+      },
       isEnvProduction && {
         loader: MiniCssExtractPlugin.loader,
         options: Object.assign(
@@ -331,30 +366,27 @@ module.exports = function(webpackEnv) {
               include: paths.appSrc,
               loader: require.resolve('babel-loader'),
               options: {
-                customize: require.resolve(
-                  'babel-preset-react-app/webpack-overrides'
-                ),
-                
-                plugins: [
-                  [
-                    require.resolve('babel-plugin-named-asset-import'),
-                    {
-                      loaderMap: {
-                        svg: {
-                          ReactComponent: '@svgr/webpack?-svgo,+ref![path]',
-                        },
-                      },
-                    },
-                  ],
-                  ['react-css-modules', {
-                    'filetypes': {
-                        '.scss': {
-                            'syntax': 'postcss-scss'
-                        }
-                    },
-                    'generateScopedName': localIdentName,
-                }]
-                ],
+                  customize: require.resolve(
+                    'babel-preset-react-app/webpack-overrides'
+                  ),
+                  plugins: babelOptions.plugins,
+                  // [
+                  //   ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                  //   "@babel/plugin-proposal-function-bind",
+                  //   ['react-css-modules', {
+                  //     'filetypes': {
+                  //         '.scss': {
+                  //             'syntax': 'postcss-scss'
+                  //         }
+                  //     },
+                  //     'generateScopedName': localIdentName,
+                  // }],
+                  // ["import", {
+                  //   "libraryName": "antd",
+                  //   "libraryDirectory": "es",
+                  //   "style": true
+                  // }],
+                // ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
                 // directory for faster rebuilds.
@@ -399,13 +431,13 @@ module.exports = function(webpackEnv) {
                 importLoaders: 1,
                 sourceMap: isEnvProduction && shouldUseSourceMap,
                 modules: true,
-                getLocalIdent: getCSSModuleLocalIdent,
+                // getLocalIdent: getCSSModuleLocalIdent,
               }),
             },
-            // 不要module后缀
+           // 不要module后缀
             {
               test: sassRegex,
-              include: sassModuleRegex,
+              exclude:sassModuleRegex,
               use: getStyleLoaders(
                 {
                   importLoaders: 2,
@@ -416,14 +448,15 @@ module.exports = function(webpackEnv) {
               sideEffects: true,
             },
             {
-              test: sassRegex,
+              test: sassModuleRegex,
               use: getStyleLoaders(
                 {
                   importLoaders: 2,
                   sourceMap: isEnvProduction && shouldUseSourceMap,
                   modules: true,
                   // getLocalIdent: getCSSModuleLocalIdent,
-                  localIdentName: isEnvProduction ? '[hash:base64:4]' : '[name]_[local]_[hash:base64:3]'
+                  localIdentName: localIdentName,
+                  // context: path.resolve(__dirname, 'context'),
                 },
                'sass-loader',
               ),
@@ -492,7 +525,16 @@ module.exports = function(webpackEnv) {
         files: ['**/*.css', '**/*.scss', '**/*.sass']
       }),
       // This is necessary to emit hot updates (currently CSS only):
-      isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
+      // isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
+      isEnvDevelopment && new ExtractCssChunks(
+        {
+          // Options similar to the same options in webpackOptions.output
+          // both options are optional
+          filename: "[name].css",
+          chunkFilename: "[id].css",
+          orderWarning: true, // Disable to remove warnings about conflicting order between imports
+        }
+      ),
       // Watcher doesn't work well if you mistype casing in a path so we use
       // a plugin that prints an error when you attempt to do this.
       // See https://github.com/facebook/create-react-app/issues/240
