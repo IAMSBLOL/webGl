@@ -1,0 +1,13 @@
+{
+  "main.css": "/./react-cli/build/main.98601cc0.chunk.css",
+  "main.js": "/./react-cli/build/main.18e476c0.chunk.js",
+  "main.js.map": "/./react-cli/build/main.18e476c0.chunk.js.map",
+  "runtime~main.js": "/./react-cli/build/runtime~main.c5541365.js",
+  "runtime~main.js.map": "/./react-cli/build/runtime~main.c5541365.js.map",
+  "./react-cli/build/2.aa7a0768.chunk.js": "/./react-cli/build/2.aa7a0768.chunk.js",
+  "./react-cli/build/2.aa7a0768.chunk.js.map": "/./react-cli/build/2.aa7a0768.chunk.js.map",
+  "./react-cli/build/main.98601cc0.chunk.css.map": "/./react-cli/build/main.98601cc0.chunk.css.map",
+  "index.html": "/index.html",
+  "precache-manifest.4d2670514787555d3b17a7bccea4abae.js": "/precache-manifest.4d2670514787555d3b17a7bccea4abae.js",
+  "service-worker.js": "/service-worker.js"
+}
