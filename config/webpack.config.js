@@ -46,20 +46,24 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function(webpackEnv) {
+  console.log(process.env)
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
-  const localIdentName = isEnvProduction ? '[hash:base64:5]' : '[name]__[local]___[hash:base64:5]';
+  const localIdentName = isEnvProduction ? '[hash:base64:5]' : '[name]__[local]___[hash:base64:3]';
 
   const babelrc = fs.readFileSync(require.resolve('../.babelrc'));
 
   const babelOptions = JSON.parse(babelrc);
   babelOptions.plugins.push(["react-css-modules", {
-    "filetypes": {
+    filetypes: {
         ".scss": {
             "syntax": "postcss-scss"
         }
     },
-    "generateScopedName": localIdentName,
+    generateScopedName: localIdentName,
+    context: paths.appPath,
+    exclude: "node_modules",
+    
   }])
   babelOptions.plugins.push(
     [
@@ -72,7 +76,13 @@ module.exports = function(webpackEnv) {
         },
       },
     ]
-  )
+  );
+  babelOptions.customize=require.resolve(
+    'babel-preset-react-app/webpack-overrides'
+  );
+  babelOptions.cacheDirectory= true;
+  babelOptions.cacheCompression= isEnvProduction;
+  babelOptions.compact=isEnvProduction;
   // Webpack uses `publicPath` to determine where the app is being served from.
   // It requires a trailing slash, or the file assets will get an incorrect path.
   // In development, we always serve from the root. This makes config easier.
@@ -151,6 +161,7 @@ module.exports = function(webpackEnv) {
   return {
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
+    context: paths.appPath,
     bail: isEnvProduction,
     devtool: isEnvProduction
       ? shouldUseSourceMap
@@ -365,35 +376,36 @@ module.exports = function(webpackEnv) {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: paths.appSrc,
               loader: require.resolve('babel-loader'),
-              options: {
-                  customize: require.resolve(
-                    'babel-preset-react-app/webpack-overrides'
-                  ),
-                  plugins: babelOptions.plugins,
-                  // [
-                  //   ["@babel/plugin-proposal-decorators", { "legacy": true }],
-                  //   "@babel/plugin-proposal-function-bind",
-                  //   ['react-css-modules', {
-                  //     'filetypes': {
-                  //         '.scss': {
-                  //             'syntax': 'postcss-scss'
-                  //         }
-                  //     },
-                  //     'generateScopedName': localIdentName,
-                  // }],
-                  // ["import", {
-                  //   "libraryName": "antd",
-                  //   "libraryDirectory": "es",
-                  //   "style": true
-                  // }],
-                // ],
-                // This is a feature of `babel-loader` for webpack (not Babel itself).
-                // It enables caching results in ./node_modules/.cache/babel-loader/
-                // directory for faster rebuilds.
-                cacheDirectory: true,
-                cacheCompression: isEnvProduction,
-                compact: isEnvProduction,
-              },
+              options: babelOptions,
+              // {
+              //     customize: require.resolve(
+              //       'babel-preset-react-app/webpack-overrides'
+              //     ),
+              //     plugins: babelOptions.plugins,
+              //     // [
+              //     //   ["@babel/plugin-proposal-decorators", { "legacy": true }],
+              //     //   "@babel/plugin-proposal-function-bind",
+              //     //   ['react-css-modules', {
+              //     //     'filetypes': {
+              //     //         '.scss': {
+              //     //             'syntax': 'postcss-scss'
+              //     //         }
+              //     //     },
+              //     //     'generateScopedName': localIdentName,
+              //     // }],
+              //     // ["import", {
+              //     //   "libraryName": "antd",
+              //     //   "libraryDirectory": "es",
+              //     //   "style": true
+              //     // }],
+              //   // ],
+              //   // This is a feature of `babel-loader` for webpack (not Babel itself).
+              //   // It enables caching results in ./node_modules/.cache/babel-loader/
+              //   // directory for faster rebuilds.
+              //   cacheDirectory: true,
+              //   cacheCompression: isEnvProduction,
+              //   compact: isEnvProduction,
+              // },
             },
             // Process any JS outside of the app with Babel.
             // Unlike the application JS, we only compile the standard ES features.
@@ -456,7 +468,7 @@ module.exports = function(webpackEnv) {
                   modules: true,
                   // getLocalIdent: getCSSModuleLocalIdent,
                   localIdentName: localIdentName,
-                  // context: path.resolve(__dirname, 'context'),
+                  context: paths.appPath,
                 },
                'sass-loader',
               ),
@@ -559,6 +571,11 @@ module.exports = function(webpackEnv) {
         fileName: 'asset-manifest.json',
         publicPath: publicPath,
       }),
+      // new webpack.LoaderOptionsPlugin({
+      //   options: {
+      //     context: paths.appPath,  // use this context
+      //   }
+      // }),
       // Moment.js is an extremely popular library that bundles large locale files
       // by default due to how Webpack interprets its code. This is a practical
       // solution that requires the user to opt into importing specific locales.
