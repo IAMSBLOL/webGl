@@ -2,4 +2,4 @@
 /build
 /src/public/semantic
 /src/public/fonts/iconfont
-/src/index.css
+/src/index.module.scss

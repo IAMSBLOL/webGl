@@ -61,7 +61,7 @@ module.exports = function(webpackEnv) {
         }
     },
     generateScopedName: localIdentName,
-    context: paths.appPath,
+    context: path.resolve(__dirname, 'src'),
     exclude: "node_modules",
     
   }])
@@ -162,7 +162,7 @@ module.exports = function(webpackEnv) {
   return {
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
-    context: paths.appPath,
+    context: path.resolve(__dirname, 'src'),
     bail: isEnvProduction,
     devtool: isEnvProduction
       ? shouldUseSourceMap
@@ -469,7 +469,7 @@ module.exports = function(webpackEnv) {
                   modules: true,
                   // getLocalIdent: getCSSModuleLocalIdent,
                   localIdentName: localIdentName,
-                  context: paths.appPath,
+                  // context: paths.appPath,
                 },
                'sass-loader',
               ),
