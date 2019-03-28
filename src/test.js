@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import './test.module.scss';
+import  './test.module.scss';
 
 class App extends Component {
   render() {
+    // console.log(style)
     return (
-      <div className="App" styleName='App'>
+      <div styleName='fucking'>
         123
-        <div className='fucking'>12312312321</div>
+        <div className='fuckinga'>12312312321</div>
         <div className='fuckinga'>12312312321</div>
       </div>
     );

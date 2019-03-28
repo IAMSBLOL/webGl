@@ -54,16 +54,20 @@ module.exports = function(webpackEnv) {
   const babelrc = fs.readFileSync(require.resolve('../.babelrc'));
 
   const babelOptions = JSON.parse(babelrc);
-  babelOptions.plugins.push(["react-css-modules", {
+  babelOptions.plugins.push(["babel-plugin-react-css-modules", {
     filetypes: {
         ".scss": {
             "syntax": "postcss-scss"
         }
     },
+    attributeNames: {
+      activeStyleName: 'activeClassName'
+    },
     generateScopedName: localIdentName,
-    context: path.resolve(__dirname, 'src'),
     exclude: "node_modules",
-    
+    webpackHotModuleReloading: isEnvDevelopment,
+    handleMissingStyleName: 'warn'
+    // context: path.resolve(__dirname, 'src'),
   }])
   babelOptions.plugins.push(
     [
@@ -112,7 +116,6 @@ module.exports = function(webpackEnv) {
           hot: true, // if you want HMR - we try to automatically inject hot reloading but if it's not working, add it to the config
           modules: true, // if you use cssModules, this can help.
           reloadAll: true, // when desperation kicks in - this is a brute force HMR flag
-
         }
       },
       isEnvProduction && {
@@ -162,7 +165,7 @@ module.exports = function(webpackEnv) {
   return {
     mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
     // Stop compilation early in production
-    context: path.resolve(__dirname, 'src'),
+    // context: path.resolve(__dirname, 'src'),
     bail: isEnvProduction,
     devtool: isEnvProduction
       ? shouldUseSourceMap
@@ -444,7 +447,7 @@ module.exports = function(webpackEnv) {
                 importLoaders: 1,
                 sourceMap: isEnvProduction && shouldUseSourceMap,
                 modules: true,
-                // getLocalIdent: getCSSModuleLocalIdent,
+                localIdentName: localIdentName,
               }),
             },
            // 不要module后缀
@@ -467,9 +470,9 @@ module.exports = function(webpackEnv) {
                   importLoaders: 2,
                   sourceMap: isEnvProduction && shouldUseSourceMap,
                   modules: true,
-                  // getLocalIdent: getCSSModuleLocalIdent,
+                  // getLocalIdent: ()=>localIdentName,
                   localIdentName: localIdentName,
-                  // context: paths.appPath,
+                  // context: path.resolve(__dirname, 'src'),
                 },
                'sass-loader',
               ),
