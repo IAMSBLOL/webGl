@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import  './test.module.scss';
+import './test.module.scss';
 
 class App extends Component {
-  render() {
+    render () {
     // console.log(style)
-    return (
-      <div styleName='fucking'>
+        return (
+            <div styleName='fucking'>
         123
-        <div className='fuckinga'>12312312321</div>
-        <div className='fuckinga'>12312312321</div>
-      </div>
-    );
-  }
+                <div className='fuckinga'>12312312321</div>
+                <div className='fuckinga'>12312312321</div>
+            </div>
+        );
+    }
 }
 
 export default App;
