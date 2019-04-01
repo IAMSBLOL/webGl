@@ -5,8 +5,8 @@ import thunk from 'redux-thunk';
 import createRootReducer from '../reducer';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '../saga';
-import createHistory from 'history/createBrowserHistory'
-const history = createHistory()
+import { createBrowserHistory } from 'history'
+const history = createBrowserHistory()
 const sagaMiddleware = createSagaMiddleware()
 const middleware = [sagaMiddleware, thunk, routerMiddleware(history)];
 const configureStore = (preloadedState = {}) => {
@@ -17,7 +17,7 @@ const configureStore = (preloadedState = {}) => {
             applyMiddleware(
                 routerMiddleware(history), // for dispatching history actions
                 // ... other middlewares ...
-                middleware,
+                ...middleware,
             ),
         ),
     )
