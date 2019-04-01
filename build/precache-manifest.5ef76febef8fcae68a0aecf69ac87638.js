@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": ".static/css/5.6f91fc2a.chunk.css"
   },
   {
-    "revision": "0b039863268c384a151b",
+    "revision": "e0adaad46dc1b7b3cb05",
     "url": ".static/css/main.8043c7aa.chunk.css"
   },
   {
@@ -36,8 +36,8 @@ self.__precacheManifest = [
     "url": ".static/js/4.cc955fac.chunk.js"
   },
   {
-    "revision": "0b039863268c384a151b",
-    "url": ".static/js/main.ad78fdad.chunk.js"
+    "revision": "e0adaad46dc1b7b3cb05",
+    "url": ".static/js/main.517c5aa2.chunk.js"
   },
   {
     "revision": "0925059b768b2d6abec3",
@@ -68,7 +68,7 @@ self.__precacheManifest = [
     "url": ".public\\canvas.js"
   },
   {
-    "revision": "8792fd504e71f1ca6b3d46f428aaf1d8",
+    "revision": "a1b21f9213d35c85da11ad0a54e8a875",
     "url": ".index.html"
   }
 ];
