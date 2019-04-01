@@ -16,7 +16,7 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 const WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
-const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
+// const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 // const getCSSModuleLocalIdent = require('react-dev-utils/getCSSModuleLocalIdent');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
@@ -24,6 +24,8 @@ const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
+// 拷贝静态资源
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -39,6 +41,8 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+const ANTD_ICONFONTS_PATH = 'src/public/fonts/antd/iconfont';
+const ANTD_ICONFONTS = process.env.ANTD_ICONFONTS || (path.posix || path).join('/', ANTD_ICONFONTS_PATH);
 
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
@@ -151,9 +155,15 @@ module.exports = function (webpackEnv) {
         if (preProcessor) {
             loaders.push({
                 loader: require.resolve(preProcessor),
-                options: {
+                options: preProcessor === 'less-loader' ? {
+                    modifyVars: {
+                        'icon-url': `"${ANTD_ICONFONTS}"`
+                    },
+                    javascriptEnabled: true
+                } : {
                     sourceMap: isEnvProduction && shouldUseSourceMap,
                 },
+
             });
         }
         return loaders;
@@ -186,6 +196,7 @@ module.exports = function (webpackEnv) {
         require.resolve('react-dev-utils/webpackHotDevClient'),
             // Finally, this is your app's code:
             paths.appIndexJs,
+            // path.join(__dirname, '../src/view/home/resume/canvas.js')
             // We include the app code last so that if there is a runtime error during
             // initialization, it doesn't blow up the WebpackDevServer client, and
             // changing JS code would still trigger a refresh.
@@ -322,7 +333,7 @@ module.exports = function (webpackEnv) {
                 // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
                 // please link the files into your node_modules/ and let module-resolution kick in.
                 // Make sure your source files are compiled, as they will not be processed in any way.
-                new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
+                // new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
             ],
         },
         resolveLoader: {
@@ -476,6 +487,20 @@ module.exports = function (webpackEnv) {
                             ),
                         },
                         {
+                            test: /\.less$/,
+                            // exclude: [
+                            //     path.join(config.root, 'node_modules/katex/dist/katex.min.css')
+                            // ],
+                            use: getStyleLoaders(
+                                {
+                                    importLoaders: 1,
+                                    sourceMap: isEnvProduction && shouldUseSourceMap,
+                                },
+                                'less-loader'
+                            )
+                        },
+
+                        {
                             loader: require.resolve('file-loader'),
                             exclude: [/\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/, /\.scss$/],
                             options: {
@@ -487,6 +512,12 @@ module.exports = function (webpackEnv) {
             ],
         },
         plugins: [
+            new CopyWebpackPlugin([
+                {
+                    from: path.join(paths.appSrc, 'view/home/resume/canvas.js'),
+                    to: './public'
+                },
+            ]),
             // Generates an `index.html` file with the <script> injected.
             new HtmlWebpackPlugin(
                 Object.assign(

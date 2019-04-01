@@ -1,0 +1,4 @@
+/src/public/fonts/iconfont
+*.test.js
+/coverage/*
+/src/view/home/resume/canvas.js

@@ -10,5 +10,8 @@
     "unit-no-unknown": [true, {
       "ignoreUnits": ["/x/", "string"]
     }]
-  }
+  },
+  "ignoreFiles": [
+    "**/*.min.css"
+  ]
 }
