@@ -4,7 +4,7 @@ import './resume.module.scss';
 class Resume extends Component {
     componentDidMount () {
         let s = document.createElement('script')
-        s.src = './react-cli/build/public/canvas.js'
+        s.src = '/react-cli/build/public/canvas.js'
         document.body.appendChild(s)
     }
 
