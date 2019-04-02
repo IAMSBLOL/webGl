@@ -64,11 +64,11 @@ self.__precacheManifest = [
     "url": "/react-cli/build/static/css/2.808660db.chunk.css"
   },
   {
-    "revision": "e6a497ce42b15022840dac405cb7e332",
-    "url": "/react-cli/build/public\\canvas.js"
-  },
-  {
     "revision": "fd0b17ddb6a9c8dac10dcdd67dfec039",
     "url": "/react-cli/build/index.html"
+  },
+  {
+    "revision": "e6a497ce42b15022840dac405cb7e332",
+    "url": "/react-cli/build/..\\..\\..\\react-cli\\build\\public\\canvas.js"
   }
 ];
