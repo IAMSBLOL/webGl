@@ -515,7 +515,7 @@ module.exports = function (webpackEnv) {
             new CopyWebpackPlugin([
                 {
                     from: path.join(paths.appSrc, 'view/home/resume/canvas.js'),
-                    to: './public' // 谜一样的路径，主要是部署在github很烦
+                    to: './public'
                 },
             ]),
             // Generates an `index.html` file with the <script> injected.
