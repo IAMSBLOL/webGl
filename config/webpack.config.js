@@ -93,7 +93,7 @@ module.exports = function (webpackEnv) {
     // In development, we always serve from the root. This makes config easier.
     // paths.servedPath
     const publicPath = isEnvProduction
-        ? 'react-cli/build/'
+        ? '/react-cli/build/'
         : isEnvDevelopment && '/';
     // Some apps do not use client-side routing with pushState.
     // For these, "homepage" can be set to "." to enable relative asset paths.
