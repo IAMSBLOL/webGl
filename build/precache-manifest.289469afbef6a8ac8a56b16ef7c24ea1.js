@@ -8,8 +8,8 @@ self.__precacheManifest = [
     "url": "/react-cli/build/static/css/main.8043c7aa.chunk.css"
   },
   {
-    "revision": "8d4fe5c9b9d0fda3b8ed",
-    "url": "/react-cli/build/static/js/runtime~main.c904af24.js"
+    "revision": "71a399196d8481c0b0df",
+    "url": "/react-cli/build/static/js/runtime~main.48a7ea41.js"
   },
   {
     "revision": "b3dcb429a0b454f83bc1ba45af22f300",
@@ -28,8 +28,8 @@ self.__precacheManifest = [
     "url": "/react-cli/build/static/js/3.cde649d1.chunk.js"
   },
   {
-    "revision": "574c3208bece326ca180",
-    "url": "/react-cli/build/static/js/6.e15dc54f.chunk.js"
+    "revision": "8238b005a602ac6c370f",
+    "url": "/react-cli/build/static/js/6.4daa92e1.chunk.js"
   },
   {
     "revision": "3db36ed136838a4002f4",
@@ -48,7 +48,7 @@ self.__precacheManifest = [
     "url": "/react-cli/build/static/css/7.f2a18eb0.chunk.css"
   },
   {
-    "revision": "574c3208bece326ca180",
+    "revision": "8238b005a602ac6c370f",
     "url": "/react-cli/build/static/css/6.2da900dd.chunk.css"
   },
   {
@@ -64,11 +64,11 @@ self.__precacheManifest = [
     "url": "/react-cli/build/static/css/2.808660db.chunk.css"
   },
   {
-    "revision": "fd0b17ddb6a9c8dac10dcdd67dfec039",
-    "url": "/react-cli/build/index.html"
+    "revision": "e6a497ce42b15022840dac405cb7e332",
+    "url": "/react-cli/build/public\\canvas.js"
   },
   {
-    "revision": "e6a497ce42b15022840dac405cb7e332",
-    "url": "/react-cli/build/..\\..\\..\\react-cli\\build\\public\\canvas.js"
+    "revision": "04fe01579afd51ea547b904400d154a6",
+    "url": "/react-cli/build/index.html"
   }
 ];
