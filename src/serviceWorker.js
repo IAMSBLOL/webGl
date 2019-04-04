@@ -21,9 +21,11 @@ const isLocalhost = Boolean(
 );
 
 export function register (config) {
-    if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+    // process.env.NODE_ENV === 'production' &&
+    if ('serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
         const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
+        console.log(publicUrl.origin, window.location.origin)
         if (publicUrl.origin !== window.location.origin) {
             // Our service worker won't work if PUBLIC_URL is on a different origin
             // from what our page is served on. This might happen if a CDN is used to
@@ -32,6 +34,7 @@ export function register (config) {
         }
 
         window.addEventListener('load', () => {
+            console.warn(process.env.PUBLIC_URL, 'process.env.PUBLIC_URL')
             const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
 
             if (isLocalhost) {
@@ -42,8 +45,9 @@ export function register (config) {
                 // service worker/PWA documentation.
                 navigator.serviceWorker.ready.then(() => {
                     console.log(
+                        'addEventListener' +
                         'This web app is being served cache-first by a service ' +
-              'worker. To learn more, visit https://bit.ly/CRA-PWA'
+                        'worker. To learn more, visit https://bit.ly/CRA-PWA'
                     );
                 });
             } else {
@@ -59,6 +63,7 @@ function registerValidSW (swUrl, config) {
         .register(swUrl)
         .then(registration => {
             registration.onupdatefound = () => {
+                console.log(registration, '65656565')
                 const installingWorker = registration.installing;
                 if (installingWorker == null) {
                     return;
@@ -70,8 +75,9 @@ function registerValidSW (swUrl, config) {
                             // but the previous service worker will still serve the older
                             // content until all client tabs are closed.
                             console.log(
+                                'registerValidSW' +
                                 'New content is available and will be used when all ' +
-                  'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
+                                'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
                             );
 
                             // Execute callback
@@ -102,20 +108,23 @@ function checkValidServiceWorker (swUrl, config) {
     // Check if the service worker can be found. If it can't reload the page.
     fetch(swUrl)
         .then(response => {
-            // Ensure service worker exists, and that we really are getting a JS file.
+            console.log(response, 109)
+            // 确保这个worker存在，然后请求一下看看
             const contentType = response.headers.get('content-type');
             if (
-                response.status === 404 ||
-        (contentType != null && contentType.indexOf('javascript') === -1)
+                response.status === 404 || (contentType != null && contentType.indexOf('javascript') === -1)
             ) {
-                // No service worker found. Probably a different app. Reload the page.
+                console.log('ififif', 115)
+                // 没有worker，取消安装且刷新
                 navigator.serviceWorker.ready.then(registration => {
                     registration.unregister().then(() => {
+                        console.log('reload', 118)
                         window.location.reload();
                     });
                 });
             } else {
-                // Service worker found. Proceed as normal.
+                // 找到文件，安装.
+                console.log('i can register', 125)
                 registerValidSW(swUrl, config);
             }
         })
