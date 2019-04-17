@@ -3,7 +3,7 @@
 
 
 ## Demo 主页  （emmm打包路径很难适配gayhub啊，待优化）
-https://iamsblol.github.io/react-cli/build/index.html
+https://iamsblol.github.io/THREE-CUBE/index.html
 
 ## Scripts
 
