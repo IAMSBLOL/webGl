@@ -306,9 +306,9 @@ class Layout extends Component {
             for (let i = 0; i < 3; i++) {
                 for (let j = 0; j < 3; j++) {
                     for (let t = 0; t < 3; t++) {
-                        this.cubes[i][j][t].position.x += 0.1;
-                        this.cubes[i][j][t].position.y += 0.1;
-                        this.cubes[i][j][t].position.z += 0.1;
+                        this.cubes[i][j][t].position.x += 0.08;
+                        this.cubes[i][j][t].position.y += 0.08;
+                        this.cubes[i][j][t].position.z += 0.08;
                     }
                 }
             }
@@ -316,16 +316,16 @@ class Layout extends Component {
             for (let i = 0; i < 3; i++) {
                 for (let j = 0; j < 3; j++) {
                     for (let t = 0; t < 3; t++) {
-                        this.cubes[i][j][t].position.x -= 0.1;
-                        this.cubes[i][j][t].position.y -= 0.1;
-                        this.cubes[i][j][t].position.z -= 0.1;
+                        this.cubes[i][j][t].position.x -= 0.08;
+                        this.cubes[i][j][t].position.y -= 0.08;
+                        this.cubes[i][j][t].position.z -= 0.08;
                     }
                 }
             }
         }
         // this.group.rotation.y += 0.01
-        this.topCube.rotation.x += 0.01
-        this.bottomCube.rotation.z += 0.01
+        this.topCube.rotation.x += 0.005
+        this.bottomCube.rotation.z += 0.005
         // this.bottomCube.rotation.y += 0.05
         // this.bottomCube.rotation.z += 0.05
 
