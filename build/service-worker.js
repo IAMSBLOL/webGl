@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/THREE-CUBE/precache-manifest.7d071653676081916b110a53bfdfe7bc.js"
+  "/THREE-CUBE/precache-manifest.1e5b486827bcc93656a41bb376a0a04f.js"
 );
 
 workbox.clientsClaim();

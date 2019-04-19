@@ -1,29 +1,40 @@
 import React, { Component } from 'react';
 import './layout.module.scss';
-// import ali from '../../../../public/images/ali.png'
-// import wx from '../../../../public/images/wx.png'
-// import bd from '../../../../public/images/bd.png'
-// import fb from '../../../../public/images/fb.png'
-// import tc from '../../../../public/images/tc.png'
-// import BOX from '../../../../public/images/box.png'
+import greenBg from '../../../../public/images/icon/lsbg.png'
+import greenTv from '../../../../public/images/icon/lstv.png'
+import greenXinhao from '../../../../public/images/icon/lslz.png'
+import lsxh from '../../../../public/images/icon/lsxh.png'
+import qianhuangBG from '../../../../public/images/icon/qhbg.png'
+import qianhuangBi from '../../../../public/images/icon/qhgb.png'
+import qianhuangHouse from '../../../../public/images/icon/qhfz.png'
+import qianhuangMaozi from '../../../../public/images/icon/qhyb.png'
+import qianlanBG from '../../../../public/images/icon/qlbg.png'
+import qianlanRen from '../../../../public/images/icon/qlfz.png'
+import qianlanStar from '../../../../public/images/icon/qlxx.png'
+import qlxt from '../../../../public/images/icon/qlxt.png'
+import shenlanBG from '../../../../public/images/icon/slbg.png'
+import shenlanUser from '../../../../public/images/icon/slyh.png'
+import shenlanXitong from '../../../../public/images/icon/slxt.png'
+
 import { Scene,
     PerspectiveCamera,
     WebGLRenderer,
 
-    BoxGeometry,
-    // MeshStandardMaterial,
+    PlaneGeometry,
+    BoxBufferGeometry,
+
+    MeshLambertMaterial,
     Mesh,
     DirectionalLight,
-    // BoxGeometry,
-    // Object3D,
+
     GridHelper,
     AmbientLight,
-    // MeshNormalMaterial,
-    MeshLambertMaterial,
-    // RepeatWrapping,
+
+    MeshBasicMaterial,
+
     Group,
-    // TextureLoader,
-    // LinearFilter
+
+    TextureLoader
 } from 'three';
 const scene = new Scene();
 
@@ -35,9 +46,20 @@ class Layout extends Component {
     constructor () {
         super()
         this.preTime = 0
+        this.initImg()
     }
 
     componentDidMount () {
+        console.log(TextureLoader, 'TextureLoader');
+        const support = (function () {
+            try {
+                var canvas = document.createElement('canvas');
+                return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+            } catch (e) {
+                return false;
+            }
+        })()
+        console.log(support, 'support')
         this.start()
         window.addEventListener('resize', () => {
             camera.aspect = this.webgl.offsetWidth / this.webgl.offsetHeight;
@@ -48,13 +70,11 @@ class Layout extends Component {
     }
 
     start=() => {
-        console.log(scene)
-        console.log(camera)
-        console.log(renderer)
         this.initThree()
         this.initCamera()
         this.initLight()
         // this.initGrid()
+        // this.initPlane()
         this.initCube()
         this.animation()
     }
@@ -63,29 +83,40 @@ class Layout extends Component {
         renderer.setSize(this.webgl.offsetWidth, this.webgl.offsetHeight);
         this.webgl.appendChild(renderer.domElement);
         renderer.setClearColor(0xEEEEEE, 0.0);
-        renderer.shadowMapEnabled = true;
+        // renderer.shadowMapEnabled = true;
+        // renderer.shadowMap.enabled = true;
     }
 
     initLight=() => {
-        const ambientLight = new AmbientLight(0xFFFFFF, 0.44);
-        const directionalLight = new DirectionalLight(0xffffff, 0.85);
-        directionalLight.position.set(-20, 150, 150).normalize();
+        const ambientLight = new AmbientLight(0xffffff, 0.52);
+        const directionalLight = new DirectionalLight(0xffffff, 0.75);
+        // const light = new SpotLight(0xffffff);
+
+        // light.position.set(0, 400, 0);
+
+        // // 告诉平行光需要开启阴影投射
+
+        // light.castShadow = true;
+
+        // scene.add(light);
+
+        directionalLight.position.set(-0, 150, 150).normalize();
 
         // Set up shadow properties for the light
-
+        ambientLight.castShadow = true;
         directionalLight.castShadow = true;
 
-        directionalLight.shadow.mapSize.width = 500;
-        directionalLight.shadow.mapSize.height = 500;
+        // directionalLight.shadow.mapSize.width = 500;
+        // directionalLight.shadow.mapSize.height = 500;
 
         scene.add(ambientLight);
         scene.add(directionalLight);
     }
 
     initCamera=() => {
-        camera.position.z = 460;
-        camera.position.x = 0;
-        camera.position.y = 60;
+        camera.position.z = 300;
+        camera.position.x = -20;
+        camera.position.y = 140;
         // camera.lookAt({
         //     x: 50,
         //     y: 50,
@@ -94,32 +125,76 @@ class Layout extends Component {
     }
 
     initGrid =() => {
-        var helper = new GridHelper(1000, 50, 'red', 'yellow', 'blue');
+        var helper = new GridHelper(1000, 50, 'blue', 'yellow');
         helper.position.y = -50;
-        // helper.rotation.y = 45;
         scene.add(helper);
-        // renderer.render(scene, camera);
     }
 
     initCube=() => {
-        // this.initCuBe1()
         this.initCuBe()
     }
 
-    initCuBe=() => {
-        // var values = [];
+    initPlane=() => {
+        // 底部平面
 
+        var planeGeometry = new PlaneGeometry(1000, 1000);
+
+        var planeMaterial = new MeshBasicMaterial({ color: 0xEEEEEE });
+
+        var plane = new Mesh(planeGeometry, planeMaterial);
+
+        plane.rotation.x = -0.5 * Math.PI;
+
+        plane.position.y = -0;
+
+        // 告诉底部平面需要接收阴影
+
+        plane.receiveShadow = true;
+
+        scene.add(plane);
+    }
+
+    initImg=() => {
+        this.img3DBG = [
+            new Array(6).fill(qianhuangBG),
+            new Array(6).fill(shenlanBG),
+            new Array(6).fill(qianlanBG),
+            new Array(6).fill(greenBg),
+        ]
+        this.imgMap = {
+            '002': [qianhuangHouse, qianhuangBi, qianhuangHouse, qianhuangBG, qianhuangBi, qianhuangBG],
+            '102': [qianlanRen, qianlanBG, qianlanRen, qianlanBG, qianlanRen, qianlanRen],
+            '202': [qianhuangMaozi, qianhuangBi, qianhuangHouse, qianhuangBG, qianhuangHouse, qianhuangBG],
+            '012': [greenBg, greenTv, lsxh, lsxh, greenTv, greenBg],
+            '112': [shenlanBG, shenlanBG, shenlanBG, shenlanBG, shenlanXitong, shenlanBG],
+            '212': [qianlanBG, qianlanBG, qianlanStar, qianlanBG, qianlanStar, qianlanStar],
+            '022': [shenlanBG, shenlanUser, shenlanBG, shenlanBG, shenlanUser, shenlanUser],
+            '222': [qianhuangHouse, qianhuangBi, qianhuangHouse, qianhuangBi, qianhuangMaozi, qianhuangBG],
+            '201': [qlxt, qianlanBG, qianlanBG, qianlanBG, qianlanBG, qlxt],
+            '200': [greenXinhao, greenBg, greenXinhao, greenBg, greenBg, greenBg],
+            '211': new Array(6).fill(qianlanBG),
+            '210': new Array(6).fill(shenlanBG),
+            '221': new Array(6).fill(shenlanBG),
+            '220': new Array(6).fill(qianlanBG),
+            '100': new Array(6).fill(shenlanBG),
+            '000': new Array(6).fill(qianhuangBG),
+            '001': new Array(6).fill(shenlanBG),
+            '101': [greenBg, greenBg, greenBg, greenBg, greenTv, greenBg],
+        }
+    }
+
+    initmaterials=(i, j, t, random) => {
+        // 遍历图片添加到材质里
+        // let materials = []
+        const key = `${i}${j}${t}`
+
+        return this.imgMap.hasOwnProperty(key) ? this.imgMap[key] : this.img3DBG[random]
+    }
+
+    initCuBe=() => {
         var cubes = [];
 
         var original = [];
-
-        var color = false;
-
-        var colors = [ '#F4F5F9', '#4E86FA', '#4E86FA', '#00A339', '#00A339', '#E78E5C', '#E78E5C',
-            '#F4F5F9', '#E78E5C', '#E78E5C', '#00A339', '#F4F5F9', '#FAC367', '#F4F5F9',
-            '#F4F5F9', '#E78E5C', '#FAC367', '#00A339', '#00A339', '#FAC367' ];
-
-        // const imglist = [BOX, BOX, BOX, BOX, BOX, BOX]
 
         var group = new Group();
         var group1 = new Group()
@@ -138,41 +213,34 @@ class Layout extends Component {
                     original[i][j] = [];
                 }
 
+                const index = Math.floor(Math.random() * this.img3DBG.length)
+
                 for (let t = 0; t < 3; t++) {
-                    color = colors[Math.floor(Math.random() * colors.length)];
+                    const BOXG = new BoxBufferGeometry(30, 30, 30)
+                    let materials = []
+                    const src = this.initmaterials(i, j, t, index)
+                    for (let img = 0; img < 6; img++) {
+                        materials.push(
+                            new MeshLambertMaterial({
+                                map: new TextureLoader().load(src[img],
+                                    function () {}, function () {
+                                        // renderer.render(scene, camera);
+                                    }),
+                            })
+                        )
+                    }
 
-                    // var loader = new TextureLoader();
-                    // loader.setPath('/public/images/');
-                    // var texture = loader.load(
-                    //     imglist[Math.floor(Math.random() * imglist.length)]
-                    // );
-
-                    // texture.minFilter = LinearFilter
-                    // texture.wrapS = RepeatWrapping;
-                    // texture.wrapT = RepeatWrapping;
-                    // texture.repeat.set(1, 1);
-                    const BOXG = new BoxGeometry(40, 40, 40)
                     // BOXG.faces = imglist
                     cubes[i][j][t] = new Mesh(
                         BOXG,
-                        new MeshLambertMaterial({
-
-                            // map: texture,
-                            // skinning: true,
-                            alphaTest: 1,
-                            color: color,
-                            // blendDstAlpha: 6
-                            // alphaMap: texture,
-                            // aoMap: texture
-                            // combine: 2
-                        })
+                        materials
                     );
 
                     cubes[i][j][t].overdraw = true;
 
-                    cubes[i][j][t].position.x = i * 45 + Math.random() * 10;
-                    cubes[i][j][t].position.y = j * 45 + Math.random() * 10;
-                    cubes[i][j][t].position.z = t * 45 + Math.random() * 10;
+                    cubes[i][j][t].position.x = i * 35 + Math.random() * 5;
+                    cubes[i][j][t].position.y = j * 35 + Math.random() * 5;
+                    cubes[i][j][t].position.z = t * 35 + Math.random() * 5;
 
                     original[i][j][t] = {
                         x: i * 50,
@@ -204,33 +272,35 @@ class Layout extends Component {
         group.add(group1);
         group.add(group2);
 
-        group2.rotation.y = 0.15
-        group1.rotation.y = 0.15
+        group2.rotation.y = 0.27
+        group1.rotation.y = 0.27
+        group0.rotation.y = 0.03
 
         group.position.x = 0
-        group.position.y = -70
-        group.position.z = 20
+        group.position.y = 70
+        group.position.z = 0
         group.rotation.x = -0.17 * Math.PI
-        group.rotation.y = -0.27 * Math.PI
+        group.rotation.y = -0.3 * Math.PI
+
+        group.castShadow = true;
 
         this.topCube.position.z += 60
         this.topCube.position.x -= 20
-        this.topCube.position.y += 50
+        this.topCube.position.y += 10
         this.topCube.rotation.x += 0.3
         this.topCube.rotation.y += 0.3
 
-        this.bottomCube.position.x += 80
-        this.bottomCube.position.y -= 60
-        this.bottomCube.position.z -= 80
+        this.bottomCube.position.x += 50
+        this.bottomCube.position.y -= 40
+        this.bottomCube.position.z -= 75
+        this.bottomCube.castShadow = true;
 
-        console.log(group)
         this.group = group
         this.cubes = cubes
         scene.add(group);
     }
 
     animation=(time) => {
-        // console.log(time)
         requestAnimationFrame(this.animation)
         if (Math.floor(time / 1000) % 2 === 0) {
             for (let i = 0; i < 3; i++) {
@@ -253,9 +323,9 @@ class Layout extends Component {
                 }
             }
         }
-
-        this.topCube.rotation.x += 0.05
-        this.bottomCube.rotation.x += 0.05
+        // this.group.rotation.y += 0.01
+        this.topCube.rotation.x += 0.01
+        this.bottomCube.rotation.z += 0.01
         // this.bottomCube.rotation.y += 0.05
         // this.bottomCube.rotation.z += 0.05
 
